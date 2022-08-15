@@ -4,40 +4,39 @@ function Vehicle(driver) {
   this.driver = driver;
   this.speed = 0;
 }
+
 function Train(driver) {
-  this.driver = driver;
-  this.type = 'passenger'; // 'passenger', 'freight', 'mail'
-  this.speed = 0;
-  this.drive = function (kmh) {
-    this.speed = kmh;
-    return `${this.driver} driving at ${kmh} kilometers per hour`;
-  };
-  this.stop = function () {
-    this.speed = 0;
-    return `${this.driver} has stopped`;
-  };
+  Vehicle.call(this, driver);
+  this.type = 'passenger';
 }
 
-function Truck(driver) {
-  this.driver = driver;
+Vehicle.prototype.drive = function (kmh) {
+  this.speed = kmh;
+  return `${this.driver} driving at ${kmh} kilometers per hour`;
+}
+
+Vehicle.prototype.stop = function () {
   this.speed = 0;
+  return `${this.driver} has stopped`;
+}
+
+
+function Truck(driver) {
+  Vehicle.call(this, driver);
   this.cargo = [];
-  this.drive = function (kmh) {
-    this.speed = kmh;
-    return `${this.driver} driving at ${kmh} kilometers per hour`;
-  };
-  this.stop = function () {
-    this.speed = 0;
-    return `${this.driver} has stopped`;
-  };
-  this.loadCargo = function (cargo) {
-    return this;
-  };
+}
+
+Truck.prototype.loadCargo = function (cargo) {
+  this.cargo.push(cargo);
+  return this.cargo;
 }
 
 Truck.prototype.unloadCargo = function () {
-  return this.cargo;
+  return this.cargo.pop();
 };
+
+Object.setPrototypeOf(Train.prototype, Vehicle.prototype);
+Object.setPrototypeOf(Truck.prototype, Vehicle.prototype);
 // экспорт Vehicle, Train, Truc в файл с тестами
 module.exports = { Vehicle, Train, Truck };
 
